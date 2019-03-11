@@ -142,6 +142,7 @@
   </div>
 </template>
 
+
 <script>
 export default {
   data() {
@@ -149,6 +150,7 @@ export default {
       editmode: false,
       users: {},
       form: new Form({
+        id: "",
         name: "",
         email: "",
         password: "",
@@ -160,7 +162,20 @@ export default {
   },
   methods: {
     updateUser() {
-      console.log("Editing Data");
+      this.$Progress.start();
+      // console.log("Editing Data");
+      this.form
+        .put("api/user/" + this.form.id)
+        .then(() => {
+          // success
+          $("#addNew").modal("hide");
+          Swal.fire("Updated!", "Information has been updated.", "success");
+          this.$Progress.finish();
+          Fire.$emit("AfterCreated");
+        })
+        .catch(() => {
+          this.$Progress.fail();
+        });
     },
     editModal(user) {
       this.editmode = true;
