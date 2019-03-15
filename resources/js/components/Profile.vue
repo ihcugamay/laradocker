@@ -183,23 +183,24 @@ export default {
         .put("api/profile")
         .then(() => {
           // success
-          $("#addNew").modal("hide");
-          Swal.fire("Updated!", "Information has been updated.", "success");
           this.$Progress.finish();
-          Fire.$emit("AfterCreated");
         })
         .catch(() => {
           this.$Progress.fail();
         });
     },
     updateProfile(element) {
-      // console.log("uploading");
       let file = element.target.files[0];
       let reader = new FileReader();
-      reader.onloadend = file => {
-        this.form.photo = reader.result;
-      };
-      reader.readAsDataURL(file);
+
+      if (file.size < 211775) {
+        reader.onloadend = file => {
+          this.form.photo = reader.result;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        Swal.fire("Oops...", "You are uploading a large file", "error");
+      }
     }
   },
   created() {

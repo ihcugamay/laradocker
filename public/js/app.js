@@ -2057,12 +2057,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.form.put("api/profile").then(function () {
         // success
-        $("#addNew").modal("hide");
-        Swal.fire("Updated!", "Information has been updated.", "success");
-
         _this.$Progress.finish();
-
-        Fire.$emit("AfterCreated");
       }).catch(function () {
         _this.$Progress.fail();
       });
@@ -2070,15 +2065,18 @@ __webpack_require__.r(__webpack_exports__);
     updateProfile: function updateProfile(element) {
       var _this2 = this;
 
-      // console.log("uploading");
       var file = element.target.files[0];
       var reader = new FileReader();
 
-      reader.onloadend = function (file) {
-        _this2.form.photo = reader.result;
-      };
+      if (file.size < 211775) {
+        reader.onloadend = function (file) {
+          _this2.form.photo = reader.result;
+        };
 
-      reader.readAsDataURL(file);
+        reader.readAsDataURL(file);
+      } else {
+        Swal.fire("Oops...", "You are uploading a large file", "error");
+      }
     }
   },
   created: function created() {
